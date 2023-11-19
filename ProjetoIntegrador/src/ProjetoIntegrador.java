@@ -5,11 +5,10 @@ import java.util.Collections;
 public class ProjetoIntegrador {
     public static void main(String[] args) {
         ArrayList<Pergunta> perguntas = new ArrayList<>();
-        int pontuacao = 0;
+        ArrayList<Jogador> ranking = new ArrayList<>();
         int dicasUsadas = 0;
-        
-        // Adicione suas perguntas aqui
- perguntas.add(new Pergunta("Normalmente, quantos litros de sangue uma pessoa tem?", new String[]{"1) Tem entre 2 a 4 litros.", "2) Tem entre 4 a 6 litros.", "3) Tem 10 litros.", "4) Tem 7 litros.", "Pedir dica"}, 1, "Dica: É impossível ter de 7 a 10 litros de sangue no corpo."));
+
+         perguntas.add(new Pergunta("Normalmente, quantos litros de sangue uma pessoa tem?", new String[]{"1) Tem entre 2 a 4 litros.", "2) Tem entre 4 a 6 litros.", "3) Tem 10 litros.", "4) Tem 7 litros.", "Pedir dica"}, 1, "Dica: É impossível ter de 7 a 10 litros de sangue no corpo."));
         perguntas.add(new Pergunta("Qual é o planeta mais próximo do Sol?", new String[]{"A) Vênus", "B) Terra", "C) Júpiter", "D) Mercúrio", "Pedir dica"}, 3, "Dica: Este planeta é conhecido por ser o menor do nosso sistema solar e tem uma órbita muito próxima ao Sol."));
         perguntas.add(new Pergunta("Quem foi o primeiro presidente dos Estados Unidos?", new String[]{"A) Benjamin Franklin", "B) Thomas Jefferson", "C) George Washington", "D) Abraham Lincoln", "Pedir dica"}, 2, "Dica: Este líder histórico é amplamente conhecido por sua contribuição na luta pela independência dos Estados Unidos e é frequentemente chamado de 'Pai da Nação'."));
         perguntas.add(new Pergunta("Qual é o elemento químico mais abundante na crosta terrestre?", new String[]{"A) Oxigênio", "B) Ferro", "C) Silício", "D) Carbono", "Pedir dica"}, 2, "Dica: Este elemento é essencial na formação de minerais e rochas, e é encontrado em grande quantidade na camada mais externa da Terra."));
@@ -34,15 +33,47 @@ public class ProjetoIntegrador {
         perguntas.add(new Pergunta("Qual é o país mais populoso da África?", new String[]{"A) Egito", "B) Nigéria", "C) Etiópia", "D) África do Sul", "Pedir dica"}, 1, "Dica: Este país africano possui uma população muito grande e é conhecido por sua diversidade étnica e cultural."));
         perguntas.add(new Pergunta("Qual é o desenho animado criado por Matt Groening que se passa na cidade fictícia de Springfield?", new String[]{"A) Family Guy", "B) Futurama", "C) The Simpsons", "D) American Dad!", "Pedir dica"}, 2, "Dica: A família protagonista do desenho são todos amarelos."));
         
-        // Embaralhe as perguntas
+       
         Collections.shuffle(perguntas);
-        
         JOptionPane.showMessageDialog(null, "São 10 perguntas, e cada acerto conta um ponto e irá somando, e você poderá pedir dicas apenas 5 vezes. Quem tiver mais acertos ganha!");
-        
+        int opcaoMenu = exibirMenu();
+
+        while (opcaoMenu != 3) {
+            switch (opcaoMenu) {
+                case 1:
+                    int vidas = 4;
+                    String nomeJogador = JOptionPane.showInputDialog(null, "Digite seu nome:");
+                    int pontuacao = realizarQuiz(perguntas, dicasUsadas, vidas);
+                    ranking.add(new Jogador(nomeJogador, pontuacao));
+                    break;
+                case 2:
+                    exibirRanking(ranking);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+                    break;
+            }
+
+            opcaoMenu = exibirMenu();
+        }
+
+        JOptionPane.showMessageDialog(null, "Obrigado por jogar!");
+    }
+
+    private static int exibirMenu() {
+        String[] opcoesMenu = {"Iniciar o Quiz", "Exibir Ranking", "Sair"};
+        return JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]) + 1;
+    }
+
+    private static int realizarQuiz(ArrayList<Pergunta> perguntas, int dicasUsadas, int vidas) {
+        int pontuacao = 0;
+
+        JOptionPane.showMessageDialog(null, "Você começa o quiz com " + vidas + " vidas. Cada erro custa uma vida!");
+
         for (int i = 0; i < 10; i++) {
             Pergunta pergunta = perguntas.get(i);
             int resposta = JOptionPane.showOptionDialog(null, pergunta.getPergunta(), "Questionário", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pergunta.getOpcoes(), pergunta.getOpcoes()[0]);
-            
+
             if (resposta == 4) {
                 if (dicasUsadas < 5) {
                     JOptionPane.showMessageDialog(null, pergunta.getDica());
@@ -52,16 +83,57 @@ public class ProjetoIntegrador {
                     JOptionPane.showMessageDialog(null, "Você já usou todas as suas dicas!");
                 }
             }
-            
+
             if (resposta == pergunta.getRespostaCorreta()) {
                 JOptionPane.showMessageDialog(null, "Resposta correta!");
                 pontuacao++;
             } else {
                 JOptionPane.showMessageDialog(null, "Resposta incorreta. A resposta correta é: " + pergunta.getOpcoes()[pergunta.getRespostaCorreta()]);
+                vidas--;
+                if (vidas == 0) {
+                    JOptionPane.showMessageDialog(null, "Você perdeu todas as vidas. Fim do jogo!");
+                    break;
+                }
+                JOptionPane.showMessageDialog(null, "Você tem agora " + vidas + " vidas.");
             }
         }
-        
+
         JOptionPane.showMessageDialog(null, "Você acertou " + pontuacao + " de 10 perguntas!");
+        return pontuacao;
+    }
+
+    private static void exibirRanking(ArrayList<Jogador> ranking) {
+        Collections.sort(ranking, Collections.reverseOrder());
+        StringBuilder rankingString = new StringBuilder("Ranking:\n");
+
+        for (int i = 0; i < ranking.size(); i++) {
+            rankingString.append(i + 1).append(". ").append(ranking.get(i).getNome()).append(": ").append(ranking.get(i).getPontuacao()).append(" pontos\n");
+        }
+
+        JOptionPane.showMessageDialog(null, rankingString.toString(), "Ranking", JOptionPane.INFORMATION_MESSAGE);
+    }
+}
+
+class Jogador implements Comparable<Jogador> {
+    private String nome;
+    private int pontuacao;
+
+    public Jogador(String nome, int pontuacao) {
+        this.nome = nome;
+        this.pontuacao = pontuacao;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getPontuacao() {
+        return pontuacao;
+    }
+
+    @Override
+    public int compareTo(Jogador jogador) {
+        return Integer.compare(this.pontuacao, jogador.getPontuacao());
     }
 }
 
