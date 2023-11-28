@@ -8,7 +8,7 @@ public class ProjetoIntegrador {
         ArrayList<Jogador> ranking = new ArrayList<>();
         int dicasUsadas = 0;
 
-         perguntas.add(new Pergunta("Normalmente, quantos litros de sangue uma pessoa tem?", new String[]{"1) Tem entre 2 a 4 litros.", "2) Tem entre 4 a 6 litros.", "3) Tem 10 litros.", "4) Tem 7 litros.", "Pedir dica"}, 1, "Dica: É impossível ter de 7 a 10 litros de sangue no corpo."));
+        perguntas.add(new Pergunta("Normalmente, quantos litros de sangue uma pessoa tem?", new String[]{"1) Tem entre 2 a 4 litros.", "2) Tem entre 4 a 6 litros.", "3) Tem 10 litros.", "4) Tem 7 litros.", "Pedir dica"}, 1, "Dica: É impossível ter de 7 a 10 litros de sangue no corpo."));
         perguntas.add(new Pergunta("Qual é o planeta mais próximo do Sol?", new String[]{"A) Vênus", "B) Terra", "C) Júpiter", "D) Mercúrio", "Pedir dica"}, 3, "Dica: Este planeta é conhecido por ser o menor do nosso sistema solar e tem uma órbita muito próxima ao Sol."));
         perguntas.add(new Pergunta("Quem foi o primeiro presidente dos Estados Unidos?", new String[]{"A) Benjamin Franklin", "B) Thomas Jefferson", "C) George Washington", "D) Abraham Lincoln", "Pedir dica"}, 2, "Dica: Este líder histórico é amplamente conhecido por sua contribuição na luta pela independência dos Estados Unidos e é frequentemente chamado de 'Pai da Nação'."));
         perguntas.add(new Pergunta("Qual é o elemento químico mais abundante na crosta terrestre?", new String[]{"A) Oxigênio", "B) Ferro", "C) Silício", "D) Carbono", "Pedir dica"}, 2, "Dica: Este elemento é essencial na formação de minerais e rochas, e é encontrado em grande quantidade na camada mais externa da Terra."));
@@ -35,7 +35,10 @@ public class ProjetoIntegrador {
         
        
         Collections.shuffle(perguntas);
-        JOptionPane.showMessageDialog(null, "São 10 perguntas, e cada acerto conta um ponto e irá somando, e você poderá pedir dicas apenas 5 vezes. Quem tiver mais acertos ganha!");
+        JOptionPane.showMessageDialog(null,
+                "<html><center><h2>Bem vindo ao Show do Milhão</h2><p style='font-size:10px;'>São 10 perguntas, e cada acerto você ganha R$ 10.000, e você poderá pedir dicas apenas 5 vezes.<strong style='color:blue;'> Quem acumular mais dinheiro vence!</strong></p></center></html>",
+                "Show do Milhão", JOptionPane.INFORMATION_MESSAGE);
+
         int opcaoMenu = exibirMenu();
 
         while (opcaoMenu != 3) {
@@ -43,8 +46,8 @@ public class ProjetoIntegrador {
                 case 1:
                     int vidas = 4;
                     String nomeJogador = JOptionPane.showInputDialog(null, "Digite seu nome:");
-                    int pontuacao = realizarQuiz(perguntas, dicasUsadas, vidas);
-                    ranking.add(new Jogador(nomeJogador, pontuacao));
+                    int dinheiroGanho = realizarQuiz(perguntas, dicasUsadas, vidas);
+                    ranking.add(new Jogador(nomeJogador, dinheiroGanho));
                     break;
                 case 2:
                     exibirRanking(ranking);
@@ -61,34 +64,41 @@ public class ProjetoIntegrador {
     }
 
     private static int exibirMenu() {
-        String[] opcoesMenu = {"Iniciar o Quiz", "Exibir Ranking", "Sair"};
-        return JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]) + 1;
+        String[] opcoesMenu = { "Iniciar o Quiz", "Exibir Ranking", "Sair" };
+        return JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu", JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]) + 1;
     }
 
     private static int realizarQuiz(ArrayList<Pergunta> perguntas, int dicasUsadas, int vidas) {
-        int pontuacao = 0;
+        int dinheiroGanho = 0;
 
-        JOptionPane.showMessageDialog(null, "Você começa o quiz com " + vidas + " vidas. Cada erro custa uma vida!");
+        JOptionPane.showMessageDialog(null,
+                "Você começa o quiz com " + vidas + " vidas. Cada erro custa uma vida!");
 
         for (int i = 0; i < 10; i++) {
             Pergunta pergunta = perguntas.get(i);
-            int resposta = JOptionPane.showOptionDialog(null, pergunta.getPergunta(), "Questionário", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pergunta.getOpcoes(), pergunta.getOpcoes()[0]);
+            int resposta = JOptionPane.showOptionDialog(null, pergunta.getPergunta(), "Questionário",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pergunta.getOpcoes(),
+                    pergunta.getOpcoes()[0]);
 
             if (resposta == 4) {
                 if (dicasUsadas < 5) {
                     JOptionPane.showMessageDialog(null, pergunta.getDica());
                     dicasUsadas++;
-                    resposta = JOptionPane.showOptionDialog(null, pergunta.getPergunta(), "Questionário", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pergunta.getOpcoes(), pergunta.getOpcoes()[0]);
+                    resposta = JOptionPane.showOptionDialog(null, pergunta.getPergunta(), "Questionário",
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pergunta.getOpcoes(),
+                            pergunta.getOpcoes()[0]);
                 } else {
                     JOptionPane.showMessageDialog(null, "Você já usou todas as suas dicas!");
                 }
             }
 
             if (resposta == pergunta.getRespostaCorreta()) {
-                JOptionPane.showMessageDialog(null, "Resposta correta!");
-                pontuacao++;
+                JOptionPane.showMessageDialog(null, "Resposta correta! Você ganhou R$ 10.000!");
+                dinheiroGanho += 10000;
             } else {
-                JOptionPane.showMessageDialog(null, "Resposta incorreta. A resposta correta é: " + pergunta.getOpcoes()[pergunta.getRespostaCorreta()]);
+                JOptionPane.showMessageDialog(null,
+                        "Resposta incorreta. A resposta correta é: " + pergunta.getOpcoes()[pergunta.getRespostaCorreta()]);
                 vidas--;
                 if (vidas == 0) {
                     JOptionPane.showMessageDialog(null, "Você perdeu todas as vidas. Fim do jogo!");
@@ -98,8 +108,8 @@ public class ProjetoIntegrador {
             }
         }
 
-        JOptionPane.showMessageDialog(null, "Você acertou " + pontuacao + " de 10 perguntas!");
-        return pontuacao;
+        JOptionPane.showMessageDialog(null, "Você ganhou R$ " + dinheiroGanho + " neste jogo!");
+        return dinheiroGanho;
     }
 
     private static void exibirRanking(ArrayList<Jogador> ranking) {
@@ -107,7 +117,8 @@ public class ProjetoIntegrador {
         StringBuilder rankingString = new StringBuilder("Ranking:\n");
 
         for (int i = 0; i < ranking.size(); i++) {
-            rankingString.append(i + 1).append(". ").append(ranking.get(i).getNome()).append(": ").append(ranking.get(i).getPontuacao()).append(" pontos\n");
+            rankingString.append(i + 1).append(". ").append(ranking.get(i).getNome()).append(": R$ ")
+                    .append(ranking.get(i).getDinheiroGanho()).append("\n");
         }
 
         JOptionPane.showMessageDialog(null, rankingString.toString(), "Ranking", JOptionPane.INFORMATION_MESSAGE);
@@ -116,24 +127,24 @@ public class ProjetoIntegrador {
 
 class Jogador implements Comparable<Jogador> {
     private String nome;
-    private int pontuacao;
+    private int dinheiroGanho;
 
-    public Jogador(String nome, int pontuacao) {
+    public Jogador(String nome, int dinheiroGanho) {
         this.nome = nome;
-        this.pontuacao = pontuacao;
+        this.dinheiroGanho = dinheiroGanho;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public int getPontuacao() {
-        return pontuacao;
+    public int getDinheiroGanho() {
+        return dinheiroGanho;
     }
 
     @Override
     public int compareTo(Jogador jogador) {
-        return Integer.compare(this.pontuacao, jogador.getPontuacao());
+        return Integer.compare(this.dinheiroGanho, jogador.getDinheiroGanho());
     }
 }
 
