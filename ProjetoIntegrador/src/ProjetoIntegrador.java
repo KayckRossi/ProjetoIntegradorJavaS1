@@ -35,6 +35,8 @@ public class ProjetoIntegrador {
         
        
         Collections.shuffle(perguntas);
+        
+        //mensagem de inicio 
         JOptionPane.showMessageDialog(null,
                 "<html><center><h2>Bem vindo ao Show do Milhão</h2><p style='font-size:10px;'>São 10 perguntas, e cada acerto você ganha R$ 10.000, e você poderá pedir dicas apenas 5 vezes.<strong style='color:blue;'> Quem acumular mais dinheiro vence!</strong></p></center></html>",
                 "Show do Milhão", JOptionPane.INFORMATION_MESSAGE);
