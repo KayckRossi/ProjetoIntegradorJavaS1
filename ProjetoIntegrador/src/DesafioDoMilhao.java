@@ -78,7 +78,6 @@ public class DesafioDoMilhao {
 
     private static int realizarQuiz(ArrayList<Pergunta> perguntas, int dicasUsadas, int vidas) {
         int dinheiroGanho = 0;
-
         JOptionPane.showMessageDialog(null,
                 "Você começa o quiz com " + vidas + " vidas. Cada erro custa uma vida!");
 
